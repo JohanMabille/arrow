@@ -208,7 +208,17 @@ template <typename TYPE>
 class ARROW_EXPORT NumericArray : public PrimitiveArray {
  public:
   using TypeClass = TYPE;
+
   using value_type = typename TypeClass::c_type;
+  using reference = value_type&;
+  using const_reference = const value_type&;
+  using pointer = value_type*;
+  using const_pointer = const value_type*;
+  using size_type = int64_t;
+  using difference_type = int64_t;
+
+  using iterator = pointer;
+  using const_iterator = const_pointer;
 
   using PrimitiveArray::PrimitiveArray;
 
@@ -232,6 +242,20 @@ class ARROW_EXPORT NumericArray : public PrimitiveArray {
   std::shared_ptr<Array> Slice(int64_t offset, int64_t length) const override;
 
   value_type Value(int64_t i) const { return raw_data()[i]; }
+
+  void resize(size_type) {} // Placeholder
+  size_type size() const { return this->length(); }
+
+  const_reference front() const { return *(raw_data()); }
+  const_reference back() const { return *(raw_data() + size() - 1); }
+  const_reference operator[](size_type i) const { return raw_data()[i]; }
+
+  const_iterator begin() const { return raw_data(); }
+  const_iterator end() const { return raw_data() + size(); }
+
+  const_iterator cbegin() const { return begin(); }
+  const_iterator cend() const { return end(); }
+
 };
 
 class ARROW_EXPORT BooleanArray : public PrimitiveArray {
@@ -251,6 +275,7 @@ class ARROW_EXPORT BooleanArray : public PrimitiveArray {
   bool Value(int64_t i) const {
     return BitUtil::GetBit(reinterpret_cast<const uint8_t*>(raw_data_), i + offset_);
   }
+
 };
 
 // ----------------------------------------------------------------------

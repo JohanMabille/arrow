@@ -25,7 +25,7 @@ CHECK_CXX_COMPILER_FLAG("-maltivec" CXX_SUPPORTS_ALTIVEC)
 
 # compiler flags that are common across debug/release builds
 #  - Wall: Enable all warnings.
-set(CXX_COMMON_FLAGS "-std=c++11 -Wall")
+set(CXX_COMMON_FLAGS "-std=c++14 -Wall")
 
 # Only enable additional instruction sets if they are supported
 if (CXX_SUPPORTS_SSE3 AND ARROW_SSE3)
@@ -37,7 +37,7 @@ endif()
 
 if (APPLE)
   # Depending on the default OSX_DEPLOYMENT_TARGET (< 10.9), libstdc++ may be
-  # the default standard library which does not support C++11. libc++ is the
+  # the default standard library which does not support C++14. libc++ is the
   # default from 10.9 onward.
   set(CXX_COMMON_FLAGS "${CXX_COMMON_FLAGS} -stdlib=libc++")
 endif()

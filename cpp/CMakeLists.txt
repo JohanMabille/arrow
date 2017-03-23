@@ -430,6 +430,13 @@ function(ADD_THIRDPARTY_LIB LIB_NAME)
   endif()
 endfunction()
 
+###########################
+# Adds xtensor dependency #
+###########################
+
+find_package(xtensor REQUIRED)
+include_directories(${xtensor_INCLUDE_DIR})
+
 # ----------------------------------------------------------------------
 # Add Boost dependencies (code adapted from Apache Kudu (incubating))
 
@@ -598,9 +605,9 @@ if(ARROW_BUILD_BENCHMARKS)
 
   if("$ENV{GBENCHMARK_HOME}" STREQUAL "")
     if(APPLE)
-      set(GBENCHMARK_CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
+      set(GBENCHMARK_CMAKE_CXX_FLAGS "-std=c++14 -stdlib=libc++")
     else()
-      set(GBENCHMARK_CMAKE_CXX_FLAGS "--std=c++11")
+      set(GBENCHMARK_CMAKE_CXX_FLAGS "--std=c++14")
     endif()
 
     set(GBENCHMARK_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/gbenchmark_ep/src/gbenchmark_ep-install")

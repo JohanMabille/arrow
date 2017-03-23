@@ -29,6 +29,8 @@
 #include "arrow/test-util.h"
 #include "arrow/type.h"
 
+#include "xtensor/xarray.hpp"
+
 namespace arrow {
 
 class TestArray : public ::testing::Test {
@@ -152,7 +154,29 @@ TEST_F(TestArray, BuildLargeInMemoryArray) {
 
   ASSERT_EQ(length, result->length());
 }
-
 TEST_F(TestArray, TestCopy) {}
+
+TEST_F(TestArray, xtensor) {
+  std::vector<int64_t> e1 = { 1, 2, 3, 4, 5, 6 };
+  std::vector<int64_t> e2 = { 1, 2, 3 };
+
+  auto buf1 = test::GetBufferFromVector(e1);
+  auto buf2 = test::GetBufferFromVector(e2);
+
+  Int64Array a1(static_cast<int64_t>(e1.size()), buf1);
+  Int64Array a2(static_cast<int64_t>(e2.size()), buf2);
+
+  using arrow_tensor = xt::xarray_adaptor<Int64Array>;
+  arrow_tensor t1(a1, { 2, 3 });
+  arrow_tensor t2(a2, { 3 });
+
+  xt::xarray<int64_t> res = t1 + t2;
+
+  xt::xarray<int64_t> expected =
+    {{ 2, 4, 6 },
+     { 5, 7, 9 }};
+
+  ASSERT_TRUE(xt::all(xt::equal(res, expected)));
+}
 
 }  // namespace arrow
